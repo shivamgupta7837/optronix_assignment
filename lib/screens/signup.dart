@@ -76,7 +76,6 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
           backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: true,
         title:  AppFonts().appBarHeading('Business Signup')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

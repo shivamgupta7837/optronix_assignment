@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
             icon: const Icon(Icons.logout,color: Colors.red,size: 22,),
             onPressed: () async {
               if (context.mounted) {
+                SharePreference.instance.logOut();
                 Navigator.pushReplacementNamed(context, '/login');
               }
             },

@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optronix_assignment/screens/home_screen.dart';
 import 'package:optronix_assignment/screens/login_Screen.dart';
+import 'package:optronix_assignment/screens/login_screen_phone.dart';
 import 'package:optronix_assignment/screens/signup.dart';
+import 'package:optronix_assignment/screens/splash_screen.dart';
 import 'package:optronix_assignment/services/share_pref/share_pref.dart';
 import 'package:optronix_assignment/utils/themes/app_colors.dart';
 import 'package:optronix_assignment/view_model/auth/auth_cubit.dart';
@@ -11,7 +13,7 @@ import 'package:optronix_assignment/view_model/auth/auth_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final prefs = SharePreference.instance.init();
+  await SharePreference.instance.init();
 
   runApp(MyApp());
 }
@@ -31,11 +33,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors().primaryColor),
       ),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/login',
+        initialRoute: '/splashScreen',
         routes: {
           '/login': (context) => const LoginScreen(),
-          '/signup': (context) => const SignupScreen(),
           '/home': (context) => const HomeScreen(),
+          '/signup': (context) => const SignupScreen(),
+          '/loginPhoneScreen': (context) => const LoginScreenPhone(),
+          '/splashScreen': (context) => const SplashScreen(),
         },
       ),
     );

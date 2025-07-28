@@ -7,6 +7,7 @@ class SharePreference {
   final String _signedUpDetails = "LOGIN_DETAILS";
   final String _userEmail = "USER_EMAIL";
   final String _userPassword = "USER_PASSWORD";
+  final String _userPhone = "USER_PHONE";
 
   SharePreference._privateConstructor();
 
@@ -24,13 +25,35 @@ class SharePreference {
     SharedPreferences? sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setBool(_isLogin, true);
-  }echo "# optronix_assignment" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/shivamgupta7837/optronix_assignment.git
-git push -u origin main
+  }
+
+
+    void logOut() async {
+    SharedPreferences? sharedPreferences =
+        await SharedPreferences.getInstance();
+    sharedPreferences.setBool(_isLogin, false);
+  }
+
+  void saveUser(String email, String password, String phoneNumber) async {
+    _prefs?.setString(_userEmail, email);
+    _prefs?.setString(_userPassword, password);
+    _prefs?.setString(_userPhone, phoneNumber);
+  }
+
+  String get userId {
+    final email = _prefs?.getString(_userEmail);
+    return email ?? "";
+  }
+
+  String get userPassword {
+    final password = _prefs?.getString(_userPassword);
+    return password ?? "";
+  }
+
+  String get phoneNumber {
+    final phone = _prefs?.getString(_userPhone);
+    return phone ?? "";
+  }
 
   Future<bool?> isUserLogin() async {
     return _prefs?.getBool(_isLogin);
@@ -42,18 +65,25 @@ git push -u origin main
       _signedUpDetails,
       jsonEncode(businessModel.toJson()),
     );
+    saveUser(
+      businessModel.contactPerson.email,
+      businessModel.contactPerson.password,
+      businessModel.contactPerson.phoneNumber,
+    );
 
     print("Sf: ${bussinessDetails!.address}");
-   if(isSaved!=null){
-     if (isSaved!) {
-      print("Saved");
+    if (isSaved != null) {
+      if (isSaved!) {
+        print("Saved");
+      } else {
+        print("Unsaved");
+      }
     } else {
-      print("Unsaved");
+      print("saved null");
     }
-   }else{
-    print("saved null");
-   }
   }
+
+
   BusinessModel? get bussinessDetails {
     final result = _prefs?.getString(_signedUpDetails);
     if (result != null) {
@@ -61,5 +91,4 @@ git push -u origin main
     }
     return null;
   }
-
 }

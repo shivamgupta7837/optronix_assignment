@@ -14,11 +14,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailOrPhoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _otpController = TextEditingController();
-  
-  bool _isOtpSent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,107 +29,108 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.asset(
-                  "assets/images/logo.png",
-                  height: 250,
-                ),
-              // Email/Phone Input
+              Image.asset("assets/images/logo.png", height: 250),
+              // Email Input
               TextFormField(
-                controller: _emailOrPhoneController,
+                controller: _emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Email or Phone Number',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter email or phone number';
+                    return 'Please enter email';
                   }
                   // Basic email or phone validation
-                  bool isEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value);
-                  bool isPhone = RegExp(r'^\d{10}$').hasMatch(value);
-                  if (!isEmail && !isPhone) {
-                    return 'Please enter a valid email or 10-digit phone number';
+                  bool isEmail = RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value);
+
+                  if (!isEmail) {
+                    return 'Please enter a valid email';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
 
-              // Password or OTP Section
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter password';
-                    }
-                    return null;
-                  },
+              // Password
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
                 ),
-              const SizedBox(height: 32),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter password';
+                  }
+                  return null;
+                },
+              ),
 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/loginPhoneScreen',
+                      );
+                    },
+                    child: AppFonts().subHeading(
+                      'Login with Phone Number ?',
+                      fontColor: AppColors().primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+
+              /*
+               Login share: {"name":"bzsbbs","email":"shivamgupta4126@gmail.com","address":"jwnejeheb","phoneNumber":"1234567890","location":"Jaipur","customerCount":0,"contactPerson":{"fullName":"hii","email":"shivay7837@gmail.com","phoneNumber":"1234567890","designation":"hs","dateOfBirth":"2025-07-28T00:00:00.000","password":"@Shivam1"}}
+              */
               // Action Button
               ElevatedButton(
-                onPressed:  _handleLogin,
-            
+                onPressed: () {
+                  final email = SharePreference.instance.userId;
+                  final pass = SharePreference.instance.userPassword;
+                  print(email);
+                  print(pass);
+
+                  if (email == _emailController.text &&
+                      pass == _passwordController.text) {
+                 SharePreference.instance.setUserIsLogin();
+          Navigator.pushReplacementNamed(context, '/home');
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Email or password is incorrect')),
+                    );
+                  }
+                },
+
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(16),
                 ),
-                child: AppFonts().subHeading('Login',
-                ),
+                child: AppFonts().subHeading('Login'),
               ),
               const SizedBox(height: 16),
 
-              // Sign Up Link
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/signup');
                 },
-                child:  AppFonts().subHeading('Don\'t have an account? Sign Up',fontColor: AppColors().primaryColor),
+                child: AppFonts().subHeading(
+                  'Don\'t have an account? Sign Up',
+                  fontColor: AppColors().primaryColor,
+                ),
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-
-
-  void _handleLogin() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      bool? success;
-        success = await SharePreference.instance.isUserLogin();
-
-
-      if (success??false) {
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, '/home');
-        }
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-               'Invalid credentials'
-              ),
-            ),
-          );
-        }
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _emailOrPhoneController.dispose();
-    _passwordController.dispose();
-    _otpController.dispose();
-    super.dispose();
   }
 }
