@@ -73,9 +73,3 @@ dependencies:
 1. Clone the repository
 2. Run `flutter pub get`
 3. Run `flutter run`
-
-## Future Improvements
-- Implement secure storage for sensitive data
-- Add biometric authentication
-- Implement actual OTP service
-- Add unit and widget tests
