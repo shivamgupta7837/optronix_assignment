@@ -54,7 +54,7 @@ class _LoginScreenPhoneState extends State<LoginScreenPhone> {
               ),
               const SizedBox(height: 16),
 
-              // Password or OTP Section
+              // Password
                 TextFormField(
                   controller: _passwordController,
                   decoration: const InputDecoration(
@@ -92,8 +92,10 @@ class _LoginScreenPhoneState extends State<LoginScreenPhone> {
                   final pass = SharePreference.instance.userPassword;
                   final phone = SharePreference.instance.phoneNumber;
 
-                  if(phone==_phoneController.text && pass == _passwordController.text){
-                    _handleLogin();
+                   if (phone == _phoneController.text &&
+                      pass == _passwordController.text) {
+                 SharePreference.instance.setUserIsLogin();
+          Navigator.pushReplacementNamed(context, '/home');
                   }else{
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Phone number or password is incorrect')),
@@ -125,30 +127,6 @@ class _LoginScreenPhoneState extends State<LoginScreenPhone> {
 
 
 
-  void _handleLogin() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      bool? success;
-        success = await SharePreference.instance.isUserLogin();
-
-
-      if (success??false) {
-        if (mounted) {
-          SharePreference.instance.setUserIsLogin();
-          Navigator.pushReplacementNamed(context, '/home');
-        }
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-               'Invalid credentials'
-              ),
-            ),
-          );
-        }
-      }
-    }
-  }
 
   @override
   void dispose() {
